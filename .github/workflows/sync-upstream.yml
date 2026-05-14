@@ -122,6 +122,11 @@ jobs:
           if ! git diff --cached --quiet; then
             git commit -m "chore: restore sync-upstream workflow after sync"
           fi
+      - name: Rebase onto remote
+        if: steps.check.outputs.needs_update == 'true'
+        run: |
+          git fetch origin main
+          git rebase origin/main || git rebase --skip
 
       - name: Push
         if: steps.check.outputs.needs_update == 'true'
